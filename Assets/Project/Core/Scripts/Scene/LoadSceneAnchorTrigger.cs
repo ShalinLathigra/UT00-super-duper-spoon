@@ -1,6 +1,5 @@
 using Project.Core.ScriptableObjects;
 using Project.Core.Service;
-using UniRx;
 using UnityEngine;
 
 namespace Project.Core.Scene

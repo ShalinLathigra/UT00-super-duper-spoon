@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Project.Core.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -19,39 +19,31 @@ namespace Project.Core.Scene
         bool _isIntroNotNull;
         bool _isOutroNotNull;
 
-        public bool animating;
-
         void Start()
         {
             _isIntroNotNull = intro != null;
             _isOutroNotNull = intro != null;
-            animating = false;
-
             origin.Controller = this;
         }
 
-        public async Task PlayIntro()
+        public async UniTask PlayIntro()
         {
             if (!_isIntroNotNull) return;
-            animating = true;
             director.Play(intro);
             while (director.state != PlayState.Playing)
             {
-                await Task.Yield();
+                await UniTask.Yield();
             }
-            animating = false;
         }
 
-        public async Task PlayOutro()
+        public async UniTask PlayOutro()
         {
             if (!_isOutroNotNull) return;
-            animating = true;
             director.Play(outro);
             while (director.state != PlayState.Playing)
             {
-                await Task.Yield();
+                await UniTask.Yield();
             }
-            animating = false;
         }
     }
 }

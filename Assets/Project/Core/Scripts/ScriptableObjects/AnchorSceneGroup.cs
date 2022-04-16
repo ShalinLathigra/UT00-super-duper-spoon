@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using Project.Core.Scene;
 using UnityEngine;
 
@@ -28,12 +27,12 @@ namespace Project.Core.ScriptableObjects
             }
         }
 
-        public async Task PlayOutro()
+        public async UniTask PlayOutro()
         {
             if (_controllerFound) await Controller.PlayOutro();
         }
 
-        public async Task PlayIntro()
+        public async UniTask PlayIntro()
         {
             if (_controllerFound) await Controller.PlayIntro();
         }
