@@ -11,13 +11,13 @@ namespace Project.Core.ScriptableObjects
     [CreateAssetMenu(menuName = "SceneLoader/Create AnchorSceneData", fileName = "AnchorSceneData", order = 1)]
     public class AnchorSceneGroup : SceneGroup
     {
-        SceneController _controller;
+        TransitionController _controller;
         bool _controllerFound;
         
         /// <summary>
         /// Lazily get the sceneController. Every scene has to have one
         /// </summary>
-        public SceneController Controller
+        public TransitionController TransitionController
         {
             get => _controllerFound ? _controller : null;
             set
@@ -29,12 +29,12 @@ namespace Project.Core.ScriptableObjects
 
         public async UniTask PlayOutro()
         {
-            if (_controllerFound) await Controller.PlayOutro();
+            if (_controllerFound) await TransitionController.PlayOutro();
         }
 
         public async UniTask PlayIntro()
         {
-            if (_controllerFound) await Controller.PlayIntro();
+            if (_controllerFound) await TransitionController.PlayIntro();
         }
     }
 }

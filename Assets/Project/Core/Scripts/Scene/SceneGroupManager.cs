@@ -2,20 +2,19 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Project.Core.Logger;
-using Project.Core.Scene;
 using Project.Core.ScriptableObjects;
 using Project.Core.Service;
 using UnityEngine;
 
-namespace Project.Core
+namespace Project.Core.Scene
 {
-    public interface IGameStateManager : ICoreService
+    public interface ISceneManager : ICoreService
     {
         public void MoveToScene(AnchorSceneGroup sceneGroup);
     }
     
     
-    public class GameStateManager : MonoBehaviour, IGameStateManager
+    public class SceneGroupManager : MonoBehaviour, ISceneManager
     {
         public bool forReal = false;
         [SerializeField] AnchorSceneGroup mainMenu;
@@ -26,7 +25,7 @@ namespace Project.Core
 
         void Awake()
         {
-            ServiceLocator.Instance.TryRegister(this as IGameStateManager);
+            ServiceLocator.Instance.TryRegister(this as ISceneManager);
         }
 
         void Start()

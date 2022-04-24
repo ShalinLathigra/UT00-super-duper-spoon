@@ -13,7 +13,7 @@ namespace Project.Core.Scene
         /// </summary>
         public void PlayScene()
         {
-            if (ServiceLocator.Instance.TryGet(out IGameStateManager gameState))
+            if (ServiceLocator.Instance.TryGet(out ISceneManager gameState))
                 gameState.MoveToScene(toScene);
         }
     }

@@ -10,7 +10,7 @@ namespace Project.Core.Scene
     /// Can define an intro, an outro, or none.
     /// </summary>
     [RequireComponent(typeof(PlayableDirector))]
-    public class SceneController : MonoBehaviour
+    public class TransitionController : MonoBehaviour
     {
         [SerializeField] AnchorSceneGroup origin;
         public PlayableDirector director;
@@ -23,7 +23,7 @@ namespace Project.Core.Scene
         {
             _isIntroNotNull = intro != null;
             _isOutroNotNull = intro != null;
-            origin.Controller = this;
+            origin.TransitionController = this;
         }
 
         public async UniTask PlayIntro()

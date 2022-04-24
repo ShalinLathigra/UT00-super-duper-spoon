@@ -33,7 +33,7 @@ namespace Project.Core.Scene
         public async UniTask Load(SceneGroup sceneGroup)
         {
             AsyncOperation[] asyncOperations = sceneGroup.childScenes.Where(s => !s.Loaded)
-                .Select(s => SceneManager.LoadSceneAsync(s.SceneName, LoadSceneMode.Additive)).ToArray();
+                .Select(s => UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(s.SceneName, LoadSceneMode.Additive)).ToArray();
             await UniTask.WaitUntil(() => asyncOperations.Sum(s => s.isDone ? 0 : 1) <= 0);
         }
 
@@ -43,7 +43,7 @@ namespace Project.Core.Scene
         public async UniTask Unload(IEnumerable<SceneField> oldScenes)
         {
             AsyncOperation[] asyncOperations = oldScenes.Where(s => s.Loaded)
-                .Select(s => SceneManager.UnloadSceneAsync(s.SceneName)).ToArray();
+                .Select(s => UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(s.SceneName)).ToArray();
             await UniTask.WaitUntil(() => asyncOperations.Sum(s => s.isDone ? 0 : 1) <= 0);
         }
     }
