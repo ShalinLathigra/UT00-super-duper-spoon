@@ -6,31 +6,61 @@ using UnityEngine.InputSystem;
 
 namespace Project.Core.Input
 {
+    [Flags]
+    public enum ActionEnum
+    {
+        Started=1,
+        Performed=2,
+        Canceled=4,
+        All=7,
+    }
     /// <summary>
     /// Wraps around a player input
     /// </summary>
     public interface IInputManager : ICoreService
     {
         public InputAction GetAction(string actionName);
-        public IObservable<InputAction.CallbackContext> GetObservable(string actionName);
+        public IObservable<InputAction.CallbackContext> GetObservable(string actionName, ActionEnum targetFlags);
+        public IObservable<T> GetObservable<T>(string actionName, ActionEnum targetFlags) where T : struct;
     }
     public class InputManager : MonoBehaviour, IInputManager
     {
         [SerializeField] PlayerInput input;
 
-        void Awake()
-        {
+        void Awake() => 
             ServiceLocator.Instance.TryRegister(this as IInputManager);
-        }
 
-        public InputAction GetAction(string actionName)
+        /// <summary>
+        /// Exposes access to individual Unity InputActions that are defined.
+        /// </summary>
+        /// <param name="actionName">String name of action to target</param>
+        /// <returns>Unity Input Action</returns>
+        public InputAction GetAction(string actionName) => 
+            input.currentActionMap.FindAction(actionName, true);
+        
+        /// <summary>
+        /// Returns an IObservable<InputAction.CallbackContext
+        /// </summary>
+        /// <param name="actionName"> Name of InputAction to listen for</param>
+        /// <param name="targetFlags"> ActionEnum | other Action Enum. Specifies what action triggers to use.</param>
+        /// <returns></returns>
+        public IObservable<InputAction.CallbackContext> GetObservable(string actionName, ActionEnum targetFlags)
         {
-            return input.currentActionMap.FindAction(actionName, true);
+            return GetAction(actionName)
+                .AsObservable()
+                .Where(action =>
+                {
+                    ActionEnum actionFlags = (action.started ? ActionEnum.Started : 0) |
+                                             (action.performed ? ActionEnum.Performed : 0) |
+                                             (action.canceled ? ActionEnum.Canceled : 0);
+                    return (targetFlags & actionFlags) != 0;
+                });
         }
-
-        public IObservable<InputAction.CallbackContext> GetObservable(string actionName)
+        public IObservable<T> GetObservable<T>(string actionName, ActionEnum targetFlags) where T : struct
         {
-            return GetAction(actionName).AsObservable();
+            // Alrighty, so how exactly are we going to go from our event flags to 
+            // where given an action, AC
+            return GetObservable(actionName, targetFlags).Select(action => action.ReadValue<T>());
         }
     }
 
